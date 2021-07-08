@@ -24,24 +24,23 @@ A user defined variable influences this script as follows:
 
 ## xdg voodoo
 
-Confirm that thunderbird is the default email client:
+Confirm that `Thunderbird` is the default email client:
 
 ```shell
 xdg-mime query default 'x-scheme-handler/mailto'
 ```
 
-Expected output `thunderbird.desktop`
+Expected output `thunderbird.desktop`. 
+
+See below on how to resolve the issue.
 
 ### KDE
 
-`System Settings > Applications > Default Applications`  Ensure that
-the `Email client` is set to `Thunderbird`.
+
+1. `System Settings > Applications > Default Applications`
+2. Ensure that the `Email client` is set to `Thunderbird`.
 
 ## Tweak brave handler
 
 On `brave`, ensure that there are not hanlders for email defined or
-that `mail.google.com` is blocked:
-
-```
-brave://settings/handlers
-```
+that `mail.google.com` is blocked - see [brave handler](brave://settings/handlers)
