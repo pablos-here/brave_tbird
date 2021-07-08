@@ -1,6 +1,6 @@
 ## brave_tbird
 
-A smart-ish email client hanlder script for `brave`.
+A smart-ish email client handler script for `brave`.
 
 This script runs `Thunderbird` when a `mailto` link is clicked in
 `brave`.
