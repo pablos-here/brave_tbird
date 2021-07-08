@@ -22,15 +22,15 @@ A user defined variable influences this script as follows:
 | Defined or set to ""       | Use gmail in `brave`          |
 | Set to a Webmail URL       | Use the URL in `brave`        |
 
-## xdg voodoo
+## xdg `voodoo`
 
-Confirm that `Thunderbird` is the default email client:
+Confirm that `Thunderbird` is the default email client.
+
+The expected output from the command below is `thunderbird.desktop`. 
 
 ```shell
 xdg-mime query default 'x-scheme-handler/mailto'
 ```
-
-Expected output `thunderbird.desktop`. 
 
 See below on how to resolve the issue.
 
@@ -43,4 +43,8 @@ See below on how to resolve the issue.
 ## Tweak brave handler
 
 On `brave`, ensure that there are not hanlders for email defined or
-that `mail.google.com` is blocked - see [brave handler](brave://settings/handlers)
+that `mail.google.com` is blocked:
+
+```
+brave://settings/handlers
+```
