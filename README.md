@@ -1,9 +1,9 @@
 ## brave_tbird
 
-A smart-ish email client handler script for `brave`.
+A smart-ish email client handler script for `Brave`.
 
 This script runs `Thunderbird` when a `mailto` link is clicked in
-`brave`.
+`Brave`.
 
 Under certain conditions, webmail may be used instead of
 `Thunderbird`.
@@ -29,14 +29,22 @@ A user defined variable influences this script as follows:
 | XDG_EMAIL_HOOK_WEBMAIL_URL | If Thunderbird is not running |
 |----------------------------|-------------------------------|
 | Not defined                | Start `Thunderbird`           |
-| Defined or set to ""       | Use gmail in `brave`          |
-| Set to a Webmail URL       | Use the URL in `brave`        |
+| Defined or set to ""       | Use gmail in `Brave`          |
+| Set to a Webmail URL       | Use the URL in `Brave`        |
+
+#### Webmail URL
+
+Specify a webmail URL fragment that needs the rest of the URL to be
+provided.
+
+For example ensure that it ends with something like `...&url=`  To the
+right of the `=` will be provided.
 
 ## Set up
 
 ### Tweak brave handler
 
-On `brave`, ensure that there are not hanlders for email defined or
+On `Brave`, ensure that there are not hanlders for email defined or
 that `mail.google.com` is blocked:
 
 ```
