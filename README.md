@@ -8,9 +8,17 @@ This script runs `Thunderbird` when a `mailto` link is clicked in
 Under certain conditions, webmail may be used instead of
 `Thunderbird`.
 
-## Installation
+## Installation / upgrading
 
-TODO:
+1. [Get the latest the
+   release](https://github.com/pablo-blueoakdb/brave_tbird/releases),
+   uncompress the file and switch to the newly created directory.
+2. Copy `xdg-email-hook.sh` to a directory in your `$PATH`.  For
+   example, `~/bin`:
+
+```shell
+cp xdg-email-hook.sh ~/bin
+```
 
 ## Customization
 
