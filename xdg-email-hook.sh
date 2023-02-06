@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Copyright © 2021 Pablo Sanchez
+# Copyright © 2023 Pablo Sanchez
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -60,10 +60,10 @@
 
 is_tbird_running()
 {
-   case $WINDOW_TOOL in
-      wmctrl)  TBIRD_IS_RUNNING=$(wmctrl -lx | awk '{ if ($3 ~ /Mail.Thunderbird/) print $1 }') ;;
-      xdotool) TBIRD_IS_RUNNING=$(xdotool search --name '.*- Mozilla Thunderbird$' 2>/dev/null) ;;
-      *)       TBIRD_IS_RUNNING='' ;;
+   case $window_tool in
+      wmctrl)  tbird_is_running=$(wmctrl -lx | awk '{ if ($3 ~ /Mail.Thunderbird/) print $1 }') ;;
+      xdotool) tbird_is_running=$(xdotool search --name '.*- Mozilla Thunderbird$' 2>/dev/null) ;;
+      *)       tbird_is_running='' ;;
    esac
 }
 
@@ -73,14 +73,16 @@ is_tbird_running()
 get_window_tool()
 {
    which wmctrl > /dev/null 2>&1
-   if [ $? -eq 0 ] ; then
-      WINDOW_TOOL='wmctrl'
+   status=$?
+   if [ $status -eq 0 ] ; then
+      window_tool='wmctrl'
    else
       which xdotool > /dev/null 2>&1
-      if [ $? -eq 0 ] ; then
-         WINDOW_TOOL='xdotool'
+      status=$?
+      if [ $status -eq 0 ] ; then
+         window_tool='xdotool'
       else
-         WINDOW_TOOL='nada'
+         window_tool='nada'
       fi
    fi
 }
@@ -90,57 +92,57 @@ pop_window_xdotool()
    #
    # Pop the composition window to the top
    #
-   CURR_DESKTOP=$(xdotool get_desktop)
+   curr_desktop=$(xdotool get_desktop)
 
-   N=20
-   I=1
-   POLL=0.1
-   WID=""
+   n=20
+   i=1
+   poll=0.1
+   wid=""
 
    # To minimize polling, we wait this amount before we start
-   sleep 0.5 
-   while [ $I -ne $N -a -z "$WID" ] ; do
-      WID=$(xdotool search --desktop $CURR_DESKTOP --name 'Write.*Thunderbird')
-      if [ -z "$WID" ] ; then
-         sleep $POLL
+   sleep 0.5
+   while [ $i -ne $n ] && [ -z "$wid" ] ; do
+      wid=$(xdotool search --desktop "$curr_desktop" --name 'Write.*Thunderbird')
+      if [ -z "$wid" ] ; then
+         sleep $poll
       fi
-      let "I+=1"
+      ((i++))
    done
 
-   if [ -n "$WID" ] ; then
-      xdotool windowactivate $WID
+   if [ -n "$wid" ] ; then
+      xdotool windowactivate "$wid"
    fi
 }
 
 pop_window_wmctrl()
 {
-   CURR_DESKTOP=$(wmctrl -d | awk '{ if ($2 == "*") print $1 }')
+   curr_desktop=$(wmctrl -d | awk '{ if ($2 == "*") print $1 }')
 
-   N=20
-   I=1
-   POLL=0.1
+   n=20
+   i=1
+   poll=0.1
 
    # To minimize polling, we wait this amount before we start
    sleep 0.5
-   while [ $I -ne $N -a -z "$WIN" ] ; do
-      WIN=$(wmctrl -lx | awk -v DESKTOP=$CURR_DESKTOP '{ if ($2 == DESKTOP && $3 ~ /Msgcompose/) print $1 }')
-      if [ -z "$WIN" ] ; then
-         sleep $POLL
+   while [ $i -ne $n ] && [ -z "$win" ] ; do
+      win=$(wmctrl -lx | awk -v DESKTOP="$curr_desktop" '{ if ($2 == DESKTOP && $3 ~ /Msgcompose/) print $1 }')
+      if [ -z "$win" ] ; then
+         sleep $poll
       fi
-      let "I+=1"
+      ((i++))
    done
 
-   if [ -n "$WIN" ] ; then
-      wmctrl -i -a $WIN
+   if [ -n "$win" ] ; then
+      wmctrl -i -a "$win"
    fi
 }
 
 pop_composition_window()
 {
    # Try to pop the composition window to the top
-   if   [ $WINDOW_TOOL = 'wmctrl' ] ; then
+   if   [ $window_tool = 'wmctrl' ] ; then
       pop_window_wmctrl
-   elif [ $WINDOW_TOOL = 'xdotool' ] ; then
+   elif [ $window_tool = 'xdotool' ] ; then
       pop_window_xdotool
    fi
 }
@@ -155,8 +157,8 @@ pop_composition_window()
 #exec 2>&1
 #set -x
 
-DEFAULT_WEBMAIL_URL='https://mail.google.com/mail/?extsrc=mailto&url='
-WEBMAIL_URL=${XDG_EMAIL_HOOK_WEBMAIL_URL-'not defined'}
+default_webmail_url='https://mail.google.com/mail/?extsrc=mailto&url='
+webmail_url=${XDG_EMAIL_HOOK_webmail_url-'not defined'}
 
 get_window_tool
 
@@ -164,24 +166,24 @@ get_window_tool
 # Main
 ########################################################
 
-# When running, set TBIRD_IS_RUNNING
+# When running, set tbird_is_running
 is_tbird_running
 
-if [ -n "$TBIRD_IS_RUNNING" ] ; then
+if [ -n "$tbird_is_running" ] ; then
    thunderbird "$@" &
 
    pop_composition_window
 else # Thunderbird is not running
-   if [ "$WEBMAIL_URL" = 'not defined' ] ; then
+   if [ "$webmail_url" = 'not defined' ] ; then
       thunderbird "$@" &
 
       pop_composition_window
    else
       # Use webmail
-      if [ -n "$WEBMAIL_URL" ] ; then
-         brave-browser "$WEBMAIL_URL""$@"
+      if [ -n "$webmail_url" ] ; then
+         brave-browser "$webmail_url""$*"
       else
-         brave-browser "$DEFAULT_WEBMAIL_URL""$@"
+         brave-browser "$default_webmail_url""$*"
       fi
    fi
 fi
