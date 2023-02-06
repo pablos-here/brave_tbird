@@ -44,7 +44,7 @@ right of the `=` will be provided.
 
 ### Tweak brave handler
 
-On `Brave`, ensure that there are not hanlders for email defined or
+On `Brave`, ensure that there are no handlers for email defined or
 that `mail.google.com` is blocked:
 
 ```
